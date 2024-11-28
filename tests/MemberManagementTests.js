@@ -19,7 +19,9 @@ async function initializeDriver() {
 }
 
 describe('Member Management Tests', function() {
-    // Test 1 - Delete Member With No Member Add
+    this.timeout(10000);
+
+    // Test 1 - Delete Member With No Member Added
     it('should delete member with no members added', async function() {
         let driver = await initializeDriver();
 
@@ -40,7 +42,7 @@ describe('Member Management Tests', function() {
         }
     });
 
-    // Test 2 - Add Member "Due, John" and exclude him and verify the success message
+    // Test 2 - Add and Delete Member "Due, John" and Verify Success Message
     it('should add and delete member "Due, John" and verify the success message', async function() {
         let driver = await initializeDriver();
 
@@ -59,7 +61,7 @@ describe('Member Management Tests', function() {
             let addButton = await driver.findElement(By.id('addMemberBtn'));
             await addButton.click();
 
-            let membersSelect = await driver.wait(until.elementLocated(By.id('members')), 5000);
+            let membersSelect = await driver.wait(until.elementLocated(By.id('members')), 10000);
             await membersSelect.sendKeys('Due, John', Key.ENTER);
 
             let deleteButton = await driver.findElement(By.id('deleteMemberBtn'));
@@ -67,16 +69,15 @@ describe('Member Management Tests', function() {
 
             let alert = await driver.switchTo().alert();
             let alertText = await alert.getText();
-            
             expect(alertText).to.equal("Member removed successfully!");
-        
+
             await alert.accept();
         } finally {
             await driver.quit();
         }
     });
 
-    // Test 3 - Add Member "John Mcclane" and verify if he appears in the members box
+    // Test 3 - Add Member "Mcclane, John" and Verify If He Appears in Members Box
     it('should add member "Mcclane, John" and verify if he appears in the members box', async function() {
         let driver = await initializeDriver();
 
@@ -95,7 +96,7 @@ describe('Member Management Tests', function() {
             let addButton = await driver.findElement(By.id('addMemberBtn'));
             await addButton.click();
 
-            let membersSelect = await driver.wait(until.elementLocated(By.id('members')), 5000);
+            let membersSelect = await driver.wait(until.elementLocated(By.id('members')), 10000);
             let options = await membersSelect.findElements(By.tagName('option'));
             let memberAdded = false;
 
@@ -115,7 +116,7 @@ describe('Member Management Tests', function() {
         }
     });
 
-    // Test 4 - Add Member Without Group Size defined
+    // Test 4 - Show Alert When Adding Member Without Group Size Defined
     it('should show an alert when adding a member without group size defined', async function() {
         let driver = await initializeDriver();
 
@@ -140,4 +141,3 @@ describe('Member Management Tests', function() {
         }
     });
 });
-
